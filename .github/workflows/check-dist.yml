@@ -1,0 +1,26 @@
+name: Check dist
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node build.mjs
+      - name: Fail if dist/ is out of date
+        run: |
+          if [ -n "$(git status --porcelain dist/)" ]; then
+            echo "::error::dist/ does not match the output of build.mjs. Run 'node build.mjs' and commit the result."
+            git status --porcelain dist/
+            exit 1
+          fi
