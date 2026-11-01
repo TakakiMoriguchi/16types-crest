@@ -4,58 +4,257 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>16types-crest</title>
+<meta name="description" content="A seamless line pattern from your four-letter personality type and your birthday.">
 <style>
-  :root { color-scheme: light dark; --bg: #ffffff; --fg: #1f2328; --sub: #59636e; --line: #d0d7de; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --sub: #8b949e; --line: #30363d; } }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 system-ui, sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 32px 16px; }
-  h1 { font-size: 24px; margin: 0 0 4px; }
-  p { color: var(--sub); margin: 0 0 24px; }
-  form { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-  label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--sub); }
-  select, input { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
-  .preview { height: 240px; border-radius: 8px; border: 1px solid var(--line); background-size: 120px 120px; margin-bottom: 16px; }
-  .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-  code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; }
-  button { font: inherit; padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; }
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f7f9; --card: #ffffff; --fg: #1f2328; --sub: #646d78; --faint: #9aa3ad;
+    --line: #e3e6ea; --hover: #f0f2f5; --chip: #f3f4f6; --shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.06);
+    --accent: #1f2328; --accent-fg: #ffffff;
+    --day: #6b7280;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0e13; --card: #12161d; --fg: #e6edf3; --sub: #9aa4b1; --faint: #5d6672;
+      --line: #232a33; --hover: #1a2029; --chip: #181d25; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+      --accent: #e6edf3; --accent-fg: #0b0e13;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 80px; }
+  header { margin-bottom: 40px; }
+  h1 { font-size: 28px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  header p { color: var(--sub); margin: 0; max-width: 560px; }
+  h2 { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); margin: 0 0 16px; }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 28px; box-shadow: var(--shadow); }
+  @media (max-width: 480px) { .card { padding: 20px; border-radius: 16px; } }
+  .stack { display: grid; gap: 24px; }
+
+  /* Type */
+  .code { display: flex; gap: 6px; margin-bottom: 20px; }
+  .code span { flex: 1; text-align: center; font-size: 32px; font-weight: 600; letter-spacing: .02em; padding: 6px 0; border-radius: 12px; background: var(--chip); }
+  .pairs { display: grid; gap: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--chip); border-radius: 14px; }
+  .pair button { all: unset; cursor: pointer; display: flex; align-items: baseline; justify-content: center; gap: 8px; padding: 10px 8px; border-radius: 10px; color: var(--sub); transition: background .15s, color .15s, box-shadow .15s; }
+  .pair button b { font-size: 16px; color: inherit; }
+  .pair button small { font-size: 13px; }
+  .pair button:hover { color: var(--fg); }
+  .pair button[aria-pressed="true"] { background: var(--card); color: var(--fg); box-shadow: 0 1px 3px rgba(16,24,40,.12); }
+  .pair button:focus-visible { outline: 2px solid var(--fg); outline-offset: 1px; }
+
+  /* Calendar */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cal-title { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .cal-title small { display: block; font-size: 13px; font-weight: 400; color: var(--sub); letter-spacing: 0; }
+  .nav { display: flex; gap: 6px; }
+  .nav button { all: unset; cursor: pointer; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--fg); transition: background .15s; }
+  .nav button:hover { background: var(--hover); }
+  .nav button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+  .months { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; margin-bottom: 18px; }
+  .months button { all: unset; cursor: pointer; height: 6px; border-radius: 3px; opacity: .35; transition: opacity .15s, transform .15s; }
+  .months button:hover { opacity: .7; }
+  .months button[aria-current="true"] { opacity: 1; transform: scaleY(1.4); }
+  .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .days button { all: unset; cursor: pointer; aspect-ratio: 1; display: grid; place-items: center; position: relative; border-radius: 50%; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--fg); transition: background .15s, color .15s; }
+  .days button::after { content: ""; position: absolute; bottom: 14%; width: 4px; height: 4px; border-radius: 50%; background: var(--c, var(--day)); }
+  .days button:hover { background: var(--hover); }
+  .days button[aria-pressed="true"] { background: var(--c, var(--accent)); color: #fff; font-weight: 600; }
+  .days button[aria-pressed="true"]::after { background: #fff; }
+  .days button:focus-visible { outline: 2px solid var(--fg); outline-offset: 1px; }
+  .note { margin: 16px 0 0; font-size: 13px; color: var(--faint); }
+
+  /* Preview */
+  .previews { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; margin-bottom: 8px; }
+  @media (max-width: 560px) { .previews { grid-template-columns: minmax(0, 1fr); } }
+  figure { margin: 0; }
+  figcaption { font-size: 13px; color: var(--sub); margin-top: 8px; }
+  .single, .tiled { height: 240px; border-radius: 14px; border: 1px solid var(--line); background-color: var(--bg); }
+  .single { display: grid; place-items: center; }
+  .single img { width: 140px; height: 140px; }
+  .tiled { background-size: 80px 80px; }
+  .meta { display: flex; align-items: center; gap: 10px; margin: 20px 0 24px; font-size: 14px; color: var(--sub); }
+  .swatch { width: 14px; height: 14px; border-radius: 50%; background: var(--c); }
+  .meta code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--fg); }
+
+  /* Snippets */
+  .snips { display: grid; gap: 10px; }
+  .snip { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 6px 6px 6px 14px; border: 1px solid var(--line); border-radius: 12px; }
+  .snip span { font-size: 13px; color: var(--sub); }
+  .snip code { overflow-x: auto; white-space: nowrap; font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; scrollbar-width: none; }
+  .snip button { all: unset; cursor: pointer; font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 8px; background: var(--accent); color: var(--accent-fg); min-width: 52px; text-align: center; }
+  .snip button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+  @media (max-width: 480px) { .snip { grid-template-columns: minmax(0, 1fr) auto; } .snip span { grid-column: 1 / -1; } }
+  footer { margin-top: 40px; font-size: 13px; color: var(--faint); }
+  footer a { color: var(--sub); }
 </style>
 </head>
 <body>
 <main>
-  <h1>16types-crest</h1>
-  <p>A seamless pattern from your four-letter personality type and your birthday. Pick both, then copy a snippet.</p>
-  <form>
-    <label>Type <select id="type"></select></label>
-    <label>Birthday (month and day) <input id="date" type="date" value="2000-04-13" min="2000-01-01" max="2000-12-31"></label>
-  </form>
-  <div class="preview" id="preview" role="img" aria-label="Pattern preview"></div>
-  <div class="row"><code id="url"></code><button data-copy="url">Copy URL</button></div>
-  <div class="row"><code id="md"></code><button data-copy="md">Copy Markdown</button></div>
-  <div class="row"><code id="css"></code><button data-copy="css">Copy CSS</button></div>
+  <header>
+    <h1>16types-crest</h1>
+    <p>A seamless line pattern from your four-letter personality type and your birthday. Choose both, then copy a snippet.</p>
+  </header>
+
+  <div class="layout">
+    <div class="stack">
+      <section class="card" aria-labelledby="type-h">
+        <h2 id="type-h">Type</h2>
+        <div class="code" id="code" aria-hidden="true"></div>
+        <div class="pairs" id="pairs"></div>
+      </section>
+
+      <section class="card" aria-labelledby="day-h">
+        <h2 id="day-h">Birthday</h2>
+        <div class="cal-head">
+          <div class="cal-title" id="cal-title" aria-live="polite"></div>
+          <div class="nav">
+            <button type="button" id="prev" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 5 8l5 5"/></svg></button>
+            <button type="button" id="next" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg></button>
+          </div>
+        </div>
+        <div class="months" id="months"></div>
+        <div class="days" id="days" role="grid" aria-labelledby="cal-title"></div>
+        <p class="note">Only the month and day are used. Each dot is that day's line colour.</p>
+      </section>
+    </div>
+
+    <section class="card" aria-labelledby="prev-h">
+      <h2 id="prev-h">Preview</h2>
+      <div class="previews">
+        <figure>
+          <div class="single"><img id="single" alt=""></div>
+          <figcaption>Single</figcaption>
+        </figure>
+        <figure>
+          <div class="tiled" id="tiled" role="img" aria-label="Pattern repeated"></div>
+          <figcaption>Repeated</figcaption>
+        </figure>
+      </div>
+      <div class="meta"><span class="swatch" id="swatch"></span><code id="hex"></code><span id="label"></span></div>
+
+      <h2>Use it</h2>
+      <div class="snips">
+        <div class="snip"><span>URL</span><code id="s-url"></code><button type="button" data-copy="s-url">Copy</button></div>
+        <div class="snip"><span>Markdown</span><code id="s-md"></code><button type="button" data-copy="s-md">Copy</button></div>
+        <div class="snip"><span>HTML</span><code id="s-html"></code><button type="button" data-copy="s-html">Copy</button></div>
+        <div class="snip"><span>CSS</span><code id="s-css"></code><button type="button" data-copy="s-css">Copy</button></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Not affiliated with any personality assessment provider. <a href="https://github.com/TakakiMoriguchi/16types-crest">Source on GitHub</a></footer>
 </main>
 <script>
-  const types = [];
-  for (const a of 'EI') for (const b of 'NS') for (const c of 'TF') for (const d of 'JP') types.push(a + b + c + d);
-  const typeEl = document.getElementById('type');
-  const dateEl = document.getElementById('date');
-  typeEl.innerHTML = types.map((t) => `<option>${t}</option>`).join('');
-  typeEl.value = 'ENTJ';
-  function update() {
-    const [, mm, dd] = (dateEl.value || '2000-04-13').split('-');
-    const type = typeEl.value;
-    const url = new URL(`${type.toLowerCase()}/${mm}${dd}.svg`, location.href).href;
-    document.getElementById('preview').style.backgroundImage = `url(${url})`;
-    document.getElementById('url').textContent = url;
-    document.getElementById('md').textContent = `![${type}](${url})`;
-    document.getElementById('css').textContent = `background: url(${url}) repeat;`;
+  // Line colour of every day, keyed by MMDD. build.mjs fills this in.
+  const COLOURS = /*COLOURS*/{};
+
+  const PAIRS = [
+    [['E', 'Extraverted'], ['I', 'Introverted']],
+    [['N', 'Intuitive'], ['S', 'Observant']],
+    [['T', 'Thinking'], ['F', 'Feeling']],
+    [['J', 'Judging'], ['P', 'Prospecting']],
+  ];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const daysIn = (m) => new Date(Date.UTC(2000, m, 0)).getUTCDate();
+  const pad = (n) => String(n).padStart(2, '0');
+  const colour = (m, d) => COLOURS[pad(m) + pad(d)];
+
+  const state = { type: ['E', 'N', 'T', 'J'], month: 4, day: 13, view: 4 };
+  const m = /^#?([ei][ns][tf][jp])-(\d\d)(\d\d)$/i.exec(location.hash);
+  if (m && +m[2] >= 1 && +m[2] <= 12 && +m[3] >= 1 && +m[3] <= daysIn(+m[2])) {
+    state.type = m[1].toUpperCase().split('');
+    state.month = state.view = +m[2];
+    state.day = +m[3];
   }
-  typeEl.addEventListener('change', update);
-  dateEl.addEventListener('input', update);
+
+  const $ = (id) => document.getElementById(id);
+
+  // Type
+  $('pairs').innerHTML = PAIRS.map((pair, i) => `<div class="pair" role="group" aria-label="${pair[0][1]} or ${pair[1][1]}">` +
+    pair.map(([l, w]) => `<button type="button" data-i="${i}" data-l="${l}"><b>${l}</b><small>${w}</small></button>`).join('') + '</div>').join('');
+  $('pairs').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.type[b.dataset.i] = b.dataset.l;
+    update();
+  });
+
+  // Calendar
+  $('months').innerHTML = MONTHS.map((name, i) => `<button type="button" data-m="${i + 1}" aria-label="${name}" style="background:${colour(i + 1, 15) || 'var(--day)'}"></button>`).join('');
+  $('months').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (b) { state.view = +b.dataset.m; renderDays(); }
+  });
+  $('prev').addEventListener('click', () => { state.view = state.view === 1 ? 12 : state.view - 1; renderDays(); });
+  $('next').addEventListener('click', () => { state.view = state.view === 12 ? 1 : state.view + 1; renderDays(); });
+  $('days').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.month = state.view;
+    state.day = +b.dataset.d;
+    update();
+  });
+  $('days').addEventListener('keydown', (e) => {
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    let mo = state.view, d = (state.view === state.month ? state.day : 1) + step;
+    if (d < 1) { mo = mo === 1 ? 12 : mo - 1; d += daysIn(mo); }
+    else if (d > daysIn(mo)) { d -= daysIn(mo); mo = mo === 12 ? 1 : mo + 1; }
+    state.month = state.view = mo;
+    state.day = d;
+    update();
+    $('days').querySelector('[aria-pressed="true"]').focus();
+  });
+
+  function renderDays() {
+    const mo = state.view;
+    $('cal-title').innerHTML = `${MONTHS[mo - 1]}<small>${daysIn(mo)} days</small>`;
+    $('months').querySelectorAll('button').forEach((b) => b.setAttribute('aria-current', String(+b.dataset.m === mo)));
+    let html = '';
+    for (let d = 1; d <= daysIn(mo); d++) {
+      const on = mo === state.month && d === state.day;
+      const c = colour(mo, d);
+      html += `<button type="button" data-d="${d}" aria-pressed="${on}" aria-label="${MONTHS[mo - 1]} ${d}" tabindex="${on || (mo !== state.month && d === 1) ? 0 : -1}"${c ? ` style="--c:${c}"` : ''}>${d}</button>`;
+    }
+    $('days').innerHTML = html;
+  }
+
+  function update() {
+    const type = state.type.join('');
+    const mmdd = pad(state.month) + pad(state.day);
+    const url = new URL(`${type.toLowerCase()}/${mmdd}.svg`, location.href).href;
+
+    $('code').innerHTML = state.type.map((l) => `<span>${l}</span>`).join('');
+    $('pairs').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(state.type[b.dataset.i] === b.dataset.l)));
+    state.view = state.month;
+    renderDays();
+
+    $('single').src = url;
+    $('single').alt = `${type}, ${MONTHS[state.month - 1]} ${state.day}`;
+    $('tiled').style.backgroundImage = `url(${url})`;
+    const c = colour(state.month, state.day);
+    $('swatch').style.setProperty('--c', c || 'var(--day)');
+    $('hex').textContent = c || '';
+    $('label').textContent = `${type} · ${MONTHS[state.month - 1]} ${state.day}`;
+
+    $('s-url').textContent = url;
+    $('s-md').textContent = `![${type}](${url})`;
+    $('s-html').textContent = `<img src="${url}" width="120" alt="${type}">`;
+    $('s-css').textContent = `background: url(${url}) repeat;`;
+    history.replaceState(null, '', `#${type.toLowerCase()}-${mmdd}`);
+  }
+
   document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent); b.textContent = 'Copied'; }
-    catch { b.textContent = 'Copy failed'; }
-    setTimeout(() => { b.textContent = b.dataset.copy === 'url' ? 'Copy URL' : b.dataset.copy === 'md' ? 'Copy Markdown' : 'Copy CSS'; }, 1500);
+    try { await navigator.clipboard.writeText($(b.dataset.copy).textContent); b.textContent = 'Copied'; }
+    catch { b.textContent = 'Failed'; }
+    setTimeout(() => { b.textContent = 'Copy'; }, 1500);
   }));
+
   update();
 </script>
 </body>
