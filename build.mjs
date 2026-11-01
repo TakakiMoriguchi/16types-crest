@@ -1,7 +1,8 @@
 // Generates every pattern into dist/. Run with `node build.mjs`.
 // Output: dist/{type}/{mmdd}.svg, for example dist/entj/0413.svg, plus dist/index.html.
-import { mkdirSync, writeFileSync, rmSync, copyFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { patternSvg } from './src/pattern.mjs';
+import { palette } from './src/color.mjs';
 
 export const TYPES = [];
 for (const a of 'EI') for (const b of 'NS') for (const c of 'TF') for (const d of 'JP') TYPES.push(a + b + c + d);
@@ -25,6 +26,8 @@ for (const type of TYPES) {
     count++;
   }
 }
-copyFileSync('site/index.html', 'dist/index.html');
+// The picker page shows each day's line colour, so give it the full table.
+const colours = Object.fromEntries(DAYS.map(([m, d]) => [mmdd(m, d), palette(m, d).line]));
+writeFileSync('dist/index.html', readFileSync('site/index.html', 'utf8').replace('/*COLOURS*/{}', JSON.stringify(colours)));
 
 console.log(`Built ${count} patterns (${TYPES.length} types x ${DAYS.length} days) into dist/`);
