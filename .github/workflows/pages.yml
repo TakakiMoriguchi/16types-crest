@@ -1,0 +1,47 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test test/*.test.mjs
+      - run: node build.mjs
+      - name: Fail if README figures are out of date
+        run: |
+          node docs/figures.mjs
+          if [ -n "$(git status --porcelain docs/figures)" ]; then
+            echo "::error::docs/figures does not match docs/figures.mjs. Run 'node docs/figures.mjs' and commit the result."
+            git status --porcelain docs/figures
+            exit 1
+          fi
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

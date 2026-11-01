@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16types-crest</title>
+<style>
+  :root { color-scheme: light dark; --bg: #ffffff; --fg: #1f2328; --sub: #59636e; --line: #d0d7de; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --sub: #8b949e; --line: #30363d; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  p { color: var(--sub); margin: 0 0 24px; }
+  form { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--sub); }
+  select, input { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+  .preview { height: 240px; border-radius: 8px; border: 1px solid var(--line); background-size: 120px 120px; margin-bottom: 16px; }
+  .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; }
+  button { font: inherit; padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <h1>16types-crest</h1>
+  <p>A seamless pattern from your four-letter personality type and your birthday. Pick both, then copy a snippet.</p>
+  <form>
+    <label>Type <select id="type"></select></label>
+    <label>Birthday (month and day) <input id="date" type="date" value="2000-04-13" min="2000-01-01" max="2000-12-31"></label>
+  </form>
+  <div class="preview" id="preview" role="img" aria-label="Pattern preview"></div>
+  <div class="row"><code id="url"></code><button data-copy="url">Copy URL</button></div>
+  <div class="row"><code id="md"></code><button data-copy="md">Copy Markdown</button></div>
+  <div class="row"><code id="css"></code><button data-copy="css">Copy CSS</button></div>
+</main>
+<script>
+  const types = [];
+  for (const a of 'EI') for (const b of 'NS') for (const c of 'TF') for (const d of 'JP') types.push(a + b + c + d);
+  const typeEl = document.getElementById('type');
+  const dateEl = document.getElementById('date');
+  typeEl.innerHTML = types.map((t) => `<option>${t}</option>`).join('');
+  typeEl.value = 'ENTJ';
+  function update() {
+    const [, mm, dd] = (dateEl.value || '2000-04-13').split('-');
+    const type = typeEl.value;
+    const url = new URL(`${type.toLowerCase()}/${mm}${dd}.svg`, location.href).href;
+    document.getElementById('preview').style.backgroundImage = `url(${url})`;
+    document.getElementById('url').textContent = url;
+    document.getElementById('md').textContent = `![${type}](${url})`;
+    document.getElementById('css').textContent = `background: url(${url}) repeat;`;
+  }
+  typeEl.addEventListener('change', update);
+  dateEl.addEventListener('input', update);
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent); b.textContent = 'Copied'; }
+    catch { b.textContent = 'Copy failed'; }
+    setTimeout(() => { b.textContent = b.dataset.copy === 'url' ? 'Copy URL' : b.dataset.copy === 'md' ? 'Copy Markdown' : 'Copy CSS'; }, 1500);
+  }));
+  update();
+</script>
+</body>
+</html>
