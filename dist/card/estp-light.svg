@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="160" viewBox="0 0 440 160" fill="none">
+<title>ESTP - Extraverted, Observant, Thinking, Prospecting</title>
+<rect x="0.5" y="0.5" width="439" height="159" rx="10" fill="#FFFFFF" stroke="#D0D7DE"/>
+<clipPath id="f"><rect x="20" y="20" width="180" height="120" rx="6"/></clipPath><g clip-path="url(#f)"><svg x="20" y="20" width="180" height="120" viewBox="0 0 300 200" preserveAspectRatio="none"><rect width="300" height="200" fill="#D9583F"/><rect width="300" height="56" fill="#9C2F1F"/><rect y="144" width="300" height="56" fill="#9C2F1F"/><path d="M0 200 L40 200 L300 26 L300 0 L260 0 L0 174 Z" fill="#FFE08A"/><circle cx="150" cy="100" r="34" fill="#9C2F1F"/><path d="M150 74 L157 93 L176 100 L157 107 L150 126 L143 107 L124 100 L143 93 Z" fill="#FFE08A"/></svg></g>
+<g font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+<text x="222" y="42" font-size="11" letter-spacing="2" fill="#59636E">PERSONALITY TYPE</text>
+<text x="220" y="88" font-size="46" font-weight="700" letter-spacing="4" fill="#1F2328">ESTP</text>
+<g font-size="13" fill="#59636E">
+<text x="222" y="114"><tspan font-weight="700" fill="#1F2328">E</tspan> Extraverted</text>
+<text x="322" y="114"><tspan font-weight="700" fill="#1F2328">S</tspan> Observant</text>
+<text x="222" y="136"><tspan font-weight="700" fill="#1F2328">T</tspan> Thinking</text>
+<text x="322" y="136"><tspan font-weight="700" fill="#1F2328">P</tspan> Prospecting</text>
+</g>
+</g>
+</svg>

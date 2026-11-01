@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="28" viewBox="0 0 100 28" fill="none">
+<title>ENTJ</title>
+<clipPath id="r"><rect width="100" height="28" rx="4"/></clipPath>
+<g clip-path="url(#r)">
+<rect width="100" height="28" fill="#23306E"/>
+<svg width="42" height="28" viewBox="0 0 300 200" preserveAspectRatio="none"><rect width="300" height="200" fill="#3E52B5"/><rect width="300" height="56" fill="#23306E"/><rect y="144" width="300" height="56" fill="#23306E"/><rect y="60" width="300" height="4" fill="#F2C14E"/><rect y="136" width="300" height="4" fill="#F2C14E"/><circle cx="150" cy="100" r="34" fill="#23306E"/><path d="M150 74 L157 93 L176 100 L157 107 L150 126 L143 107 L124 100 L143 93 Z" fill="#F2C14E"/></svg>
+</g>
+<text x="71" y="19" text-anchor="middle" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5" fill="#FFFFFF">ENTJ</text>
+</svg>
