@@ -41,17 +41,36 @@ export function inSrgbGamut(L, C, h) {
   return oklchToLinearSrgb(L, C, h).every((x) => x >= -1e-4 && x <= 1 + 1e-4);
 }
 
-// Lightness and chroma are the same for every day, so no birthday looks louder
-// than another. The pattern has no background, so the lightness sits in the
-// middle: every hue keeps a contrast of at least 4:1 against both white and
-// GitHub's dark background (#0d1117). The colour stays inside sRGB for all hues
-// (checked in tests).
-export const LINE = { L: 0.58, C: 0.098 };
+// Each day uses the most vivid colour its hue can have on screen: for that hue,
+// the lightness between LIGHTNESS.min and LIGHTNESS.max with the highest chroma
+// that still fits in sRGB. The range keeps lines visible on both light and dark
+// backgrounds, since the pattern has no background of its own.
+export const LIGHTNESS = { min: 0.5, max: 0.75 };
+const CHROMA_MARGIN = 0.98;
+
+function maxChroma(L, h) {
+  let lo = 0;
+  let hi = 0.4;
+  for (let i = 0; i < 25; i++) {
+    const c = (lo + hi) / 2;
+    if (inSrgbGamut(L, c, h)) lo = c;
+    else hi = c;
+  }
+  return lo;
+}
+
+export function vividOklch(h) {
+  let best = { L: LIGHTNESS.min, C: 0 };
+  for (let i = 0; i <= 50; i++) {
+    const L = LIGHTNESS.min + ((LIGHTNESS.max - LIGHTNESS.min) * i) / 50;
+    const C = maxChroma(L, h);
+    if (C > best.C) best = { L, C };
+  }
+  return { L: best.L, C: best.C * CHROMA_MARGIN, h };
+}
 
 export function palette(month, day) {
   const h = solarLongitude(month, day);
-  return {
-    hue: h,
-    line: oklchToHex(LINE.L, LINE.C, h),
-  };
+  const { L, C } = vividOklch(h);
+  return { hue: h, line: oklchToHex(L, C, h) };
 }

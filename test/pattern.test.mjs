@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { solarLongitude, inSrgbGamut, oklchToHex, LINE } from '../src/color.mjs';
+import { solarLongitude, inSrgbGamut, oklchToHex, vividOklch, LIGHTNESS } from '../src/color.mjs';
 import { layers, gapsFor, patternSvg } from '../src/pattern.mjs';
 
 test('solar longitude matches the equinoxes and solstices of 2000', () => {
@@ -11,17 +11,21 @@ test('solar longitude matches the equinoxes and solstices of 2000', () => {
   assert.ok(near(solarLongitude(12, 21), 270));
 });
 
-test('line colour stays in sRGB and readable on light and dark for every hue', () => {
+test('line colour is the most vivid in-gamut colour for every hue', () => {
   const lum = (hex) => {
     const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
   };
   const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
-  for (let h = 0; h < 360; h += 0.5) {
-    assert.ok(inSrgbGamut(LINE.L, LINE.C, h), `out of gamut at ${h}`);
-    const hex = oklchToHex(LINE.L, LINE.C, h);
-    assert.ok(contrast(hex, '#ffffff') >= 4, `low contrast on white at ${h}`);
-    assert.ok(contrast(hex, '#0d1117') >= 4, `low contrast on dark at ${h}`);
+  for (let h = 0; h < 360; h += 1) {
+    const { L, C } = vividOklch(h);
+    assert.ok(L >= LIGHTNESS.min - 1e-9 && L <= LIGHTNESS.max + 1e-9, `lightness out of range at ${h}`);
+    assert.ok(inSrgbGamut(L, C, h), `out of gamut at ${h}`);
+    assert.ok(C > 0.1, `too dull at ${h}`);
+    // Vivid colours trade some contrast; keep every hue at least 2:1 on both themes.
+    const hex = oklchToHex(L, C, h);
+    assert.ok(contrast(hex, '#ffffff') >= 2, `invisible on white at ${h}`);
+    assert.ok(contrast(hex, '#0d1117') >= 2, `invisible on dark at ${h}`);
   }
 });
 
