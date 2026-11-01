@@ -9,6 +9,8 @@ A seamless line pattern made from your four-letter personality type and your bir
   <img src="docs/figures/type-esfp.svg" width="96" alt="ESFP, 13 April" />
 </p>
 
+<p align="center"><b><a href="https://takakimoriguchi.github.io/16types-crest/">Make your pattern</a></b></p>
+
 ## Usage
 
 Use the four letters you got from a test such as 16Personalities, and your birthday as month and day (`MMDD`).
