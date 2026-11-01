@@ -25,6 +25,8 @@
   main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 80px; }
   header { margin-bottom: 40px; display: flex; gap: 24px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
   .tip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--fg); font-size: 14px; font-weight: 500; text-decoration: none; box-shadow: var(--shadow); transition: background .15s; white-space: nowrap; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tip .count { margin-left: 2px; padding-left: 10px; border-left: 1px solid var(--line); color: var(--sub); font-variant-numeric: tabular-nums; }
   .tip:hover { background: var(--hover); }
   .tip:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
   h1 { font-size: 28px; letter-spacing: -0.02em; margin: 0 0 6px; }
@@ -102,7 +104,10 @@
       <h1>16types-crest</h1>
       <p>A seamless line pattern from your four-letter personality type and your birthday. Choose both, then copy a snippet.</p>
     </div>
-    <a class="tip" href="https://buymeacoffee.com/takakimoriguchi" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h11v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8Z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 2.5 2.5v2a2.5 2.5 0 0 1-2.5 2.5H16"/><path d="M5 8a2.5 2.5 0 0 1 2.5-4.5A3 3 0 0 1 13 3.5 2.5 2.5 0 0 1 16 8"/><path d="M9 12v5M12 12v5"/></svg>Buy me a beer</a>
+    <div class="links">
+      <a class="tip" href="https://github.com/TakakiMoriguchi/16types-crest" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8L12 3Z"/></svg>Star<span class="count" id="stars" hidden></span></a>
+      <a class="tip" href="https://buymeacoffee.com/takakimoriguchi" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h11v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8Z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 2.5 2.5v2a2.5 2.5 0 0 1-2.5 2.5H16"/><path d="M5 8a2.5 2.5 0 0 1 2.5-4.5A3 3 0 0 1 13 3.5 2.5 2.5 0 0 1 16 8"/><path d="M9 12v5M12 12v5"/></svg>Buy me a beer</a>
+    </div>
   </header>
 
   <div class="layout">
@@ -262,6 +267,16 @@
   }));
 
   update();
+
+  // Star count. Unauthenticated GitHub API, so it may be rate limited; the button works without it.
+  fetch('https://api.github.com/repos/TakakiMoriguchi/16types-crest')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((repo) => {
+      if (!repo || typeof repo.stargazers_count !== 'number') return;
+      $('stars').textContent = repo.stargazers_count.toLocaleString('en');
+      $('stars').hidden = false;
+    })
+    .catch(() => {});
 </script>
 </body>
 </html>
