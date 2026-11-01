@@ -156,7 +156,7 @@ Issues and pull requests are welcome.
 
 ## Support
 
-If you like this project, you can [buy me a coffee](https://buymeacoffee.com/takakimoriguchi).
+If you like this project, you can [buy me a beer](https://buymeacoffee.com/takakimoriguchi).
 
 ## Disclaimer
 
