@@ -82,15 +82,25 @@ export function gapsFor(all, index) {
 
 const num = (v) => String(Math.round(v * 100) / 100);
 
+// The woven geometry depends only on the type, so it is built once per type.
+const geometryCache = new Map();
+function geometry(type) {
+  if (!geometryCache.has(type)) {
+    const all = layers(type);
+    geometryCache.set(type, { all, gaps: all.map((_, i) => gapsFor(all, i)) });
+  }
+  return geometryCache.get(type);
+}
+
 export function patternSvg(type, month, day, { size = 200 } = {}) {
   const { line } = palette(month, day);
-  const all = layers(type);
+  const { all, gaps: gapsByLayer } = geometry(type);
   const mm = String(month).padStart(2, '0');
   const dd = String(day).padStart(2, '0');
   let defs = '';
   let body = '';
   all.forEach((layer, i) => {
-    const gaps = gapsFor(all, i);
+    const gaps = gapsByLayer[i];
     if (gaps.length === 0) {
       body += layer.svg;
       return;
