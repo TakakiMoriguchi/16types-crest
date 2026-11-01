@@ -154,6 +154,10 @@ node --test test/*.test.mjs
 
 Issues and pull requests are welcome.
 
+## Support
+
+If you like this project, you can [buy me a coffee](https://buymeacoffee.com/takakimoriguchi).
+
 ## Disclaimer
 
 This project is not affiliated with, endorsed by, or connected to 16Personalities (NERIS Analytics Limited), The Myers-Briggs Company, or any other personality assessment provider. All designs are original. The four-letter codes and the single trait words are used only to describe each type.
