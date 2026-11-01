@@ -1,4 +1,5 @@
 // Builds one seamless pattern tile from a four-letter type and a birthday.
+// Only the lines are drawn; the background is transparent.
 //
 // The tile is 100 x 100 and is made of four layers of thin lines, one per letter.
 // Layers are woven: where an upper layer crosses a lower one, the lower line gets
@@ -13,7 +14,6 @@ import { palette } from './color.mjs';
 
 const SIZE = 100;
 const STROKE_WIDTH = 1.6;
-const STROKE_OPACITY = 0.7;
 const GAP_RADIUS = 3.4;
 const MIN_CROSSING_ANGLE = 20; // degrees; shallower contacts (tangents, overlaps) are not cut
 
@@ -83,7 +83,7 @@ export function gapsFor(all, index) {
 const num = (v) => String(Math.round(v * 100) / 100);
 
 export function patternSvg(type, month, day, { size = 200 } = {}) {
-  const { line, background } = palette(month, day);
+  const { line } = palette(month, day);
   const all = layers(type);
   const mm = String(month).padStart(2, '0');
   const dd = String(day).padStart(2, '0');
@@ -104,8 +104,7 @@ export function patternSvg(type, month, day, { size = 200 } = {}) {
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${SIZE} ${SIZE}">` +
     `<title>${type} ${mm}-${dd}</title>` +
     `<defs>${defs}</defs>` +
-    `<rect width="${SIZE}" height="${SIZE}" fill="${background}"/>` +
-    `<g fill="none" stroke="${line}" stroke-width="${STROKE_WIDTH}" stroke-opacity="${STROKE_OPACITY}" stroke-linejoin="round">${body}</g>` +
+    `<g fill="none" stroke="${line}" stroke-width="${STROKE_WIDTH}" stroke-linejoin="round">${body}</g>` +
     `</svg>\n`
   );
 }

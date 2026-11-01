@@ -42,15 +42,16 @@ export function inSrgbGamut(L, C, h) {
 }
 
 // Lightness and chroma are the same for every day, so no birthday looks louder
-// than another. Both colours stay inside sRGB for all hues (checked in tests).
-export const LINE = { L: 0.75, C: 0.127 };
-export const BACKGROUND = { L: 0.27, C: 0.04 };
+// than another. The pattern has no background, so the lightness sits in the
+// middle: every hue keeps a contrast of at least 4:1 against both white and
+// GitHub's dark background (#0d1117). The colour stays inside sRGB for all hues
+// (checked in tests).
+export const LINE = { L: 0.58, C: 0.098 };
 
 export function palette(month, day) {
   const h = solarLongitude(month, day);
   return {
     hue: h,
     line: oklchToHex(LINE.L, LINE.C, h),
-    background: oklchToHex(BACKGROUND.L, BACKGROUND.C, h),
   };
 }

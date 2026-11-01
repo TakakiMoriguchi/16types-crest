@@ -100,6 +100,7 @@ The colour comes from where the Sun is on your birthday.
 |---|---|---|
 | Hue | The Sun's ecliptic longitude on that day, used directly as the hue angle | Over one year the Sun moves once around the ecliptic, 0° to 360°, just as hue goes once around the colour wheel. Every day gets its own colour. |
 | Lightness and chroma | The same for every day | No birthday looks louder or quieter than another. |
+| Background | None, only the lines are drawn | The pattern sits on any background. The lightness is chosen so the lines stay readable on both light and dark pages. |
 | Colour space | OKLCH | Colours with the same lightness value also look equally bright to the eye, whatever the hue. |
 
 <p align="center"><img src="docs/figures/hue-strip.svg" alt="Line colour for every day from January to December" /></p>

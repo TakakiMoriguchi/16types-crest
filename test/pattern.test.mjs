@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { solarLongitude, inSrgbGamut, LINE, BACKGROUND } from '../src/color.mjs';
+import { solarLongitude, inSrgbGamut, oklchToHex, LINE } from '../src/color.mjs';
 import { layers, gapsFor, patternSvg } from '../src/pattern.mjs';
 
 test('solar longitude matches the equinoxes and solstices of 2000', () => {
@@ -11,11 +11,22 @@ test('solar longitude matches the equinoxes and solstices of 2000', () => {
   assert.ok(near(solarLongitude(12, 21), 270));
 });
 
-test('line and background colours stay in sRGB for every hue', () => {
+test('line colour stays in sRGB and readable on light and dark for every hue', () => {
+  const lum = (hex) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
   for (let h = 0; h < 360; h += 0.5) {
-    assert.ok(inSrgbGamut(LINE.L, LINE.C, h), `line out of gamut at ${h}`);
-    assert.ok(inSrgbGamut(BACKGROUND.L, BACKGROUND.C, h), `background out of gamut at ${h}`);
+    assert.ok(inSrgbGamut(LINE.L, LINE.C, h), `out of gamut at ${h}`);
+    const hex = oklchToHex(LINE.L, LINE.C, h);
+    assert.ok(contrast(hex, '#ffffff') >= 4, `low contrast on white at ${h}`);
+    assert.ok(contrast(hex, '#0d1117') >= 4, `low contrast on dark at ${h}`);
   }
+});
+
+test('pattern has no background', () => {
+  assert.ok(!patternSvg('ENTJ', 4, 13).includes('<rect width="100" height="100"'));
 });
 
 test('every type has four layers and the top layer is never cut', () => {
