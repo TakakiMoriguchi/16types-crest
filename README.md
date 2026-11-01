@@ -150,14 +150,6 @@ node --test test/*.test.mjs
 
 `dist/` is not committed. On every push to `main`, GitHub Actions builds it and publishes it to GitHub Pages.
 
-## Earlier version
-
-The first release drew flag-style cards and badges. Its URLs still work, because they point at the `v1` tag:
-
-```
-https://cdn.jsdelivr.net/gh/TakakiMoriguchi/16types-crest@v1/dist/card/entj.svg
-```
-
 ## Contributing
 
 Issues and pull requests are welcome.
