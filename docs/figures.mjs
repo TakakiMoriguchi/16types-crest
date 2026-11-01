@@ -25,7 +25,8 @@ for (const [letter, type, index] of LETTERS) writeFileSync(`${OUT}/${letter}.svg
 
 // How a pattern is built: the four layers of ENTJ, then the woven tile.
 const entj = layers('ENTJ');
-[0, 1, 2, 3].forEach((index, step) => writeFileSync(`${OUT}/build-${step + 1}.svg`, frame(entj[index].svg, 96)));
+// In the order the letters are read: E, N, T, J.
+[2, 1, 0, 3].forEach((index, step) => writeFileSync(`${OUT}/build-${step + 1}.svg`, frame(entj[index].svg, 96)));
 writeFileSync(`${OUT}/build-result.svg`, patternSvg('ENTJ', 4, 13, { size: 96 }));
 
 // Examples: all 16 types on the same day.
