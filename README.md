@@ -76,15 +76,15 @@ Each pair of letters draws one layer of thin lines. The four layers are stacked 
 
 ### Weaving
 
-The layers are woven. Where an upper layer crosses a lower one, the lower line gets a short gap, so it looks like it passes underneath. From bottom to top the order is T / F, N / S, E / I, J / P.
+The layers are woven. Where an upper layer crosses a lower one, the lower line gets a short gap, so it looks like it passes underneath. From bottom to top the order is T / F, N / S, E / I, J / P. The row below shows each layer of ENTJ on its own, in the order of the letters.
 
 <table>
   <tr>
-    <td align="center"><img src="docs/figures/build-1.svg" width="72" alt="" /><br>T</td>
+    <td align="center"><img src="docs/figures/build-1.svg" width="72" alt="" /><br>E</td>
     <td align="center">+</td>
     <td align="center"><img src="docs/figures/build-2.svg" width="72" alt="" /><br>N</td>
     <td align="center">+</td>
-    <td align="center"><img src="docs/figures/build-3.svg" width="72" alt="" /><br>E</td>
+    <td align="center"><img src="docs/figures/build-3.svg" width="72" alt="" /><br>T</td>
     <td align="center">+</td>
     <td align="center"><img src="docs/figures/build-4.svg" width="72" alt="" /><br>J</td>
     <td align="center">=</td>
